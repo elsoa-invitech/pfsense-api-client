@@ -160,7 +160,8 @@ class BasePFSenseAPIClient:
         if self.config.mode == "jwt":
             kwargs["headers"]["Authorization"] = f"Bearer {self.config.jwt}"
         elif self.config.mode == "api_token":
-            kwargs["headers"]["Authorization"] = f"{self.config.client_id} {self.config.client_token}"
+            # kwargs["headers"]["Authorization"] = f"{self.config.client_id} {self.config.client_token}"
+            kwargs["headers"]["Authorization"] = f"{self.config.client_token}"
 
         return self.session.request(
             url=url,
