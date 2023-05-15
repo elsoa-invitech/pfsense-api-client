@@ -7,6 +7,8 @@ from typing import Any, Dict, List, Optional, Union
 import os
 from loguru import logger
 from pathlib import Path
+
+# import requests
 from requests import Response, Session
 import click
 
@@ -135,7 +137,7 @@ def get_client() -> PFSenseAPIClient:
     """ client factory """
     logger.remove()
     logger.add(format=LOGGER_FORMAT, sink=sys.stdout)
-    session = requests.Session()
+    session = Session()
     session.verify = False
     client = PFSenseAPIClient(
         config_filename="~/.config/pfsense-api.json",
