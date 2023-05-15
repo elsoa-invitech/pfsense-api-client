@@ -42,7 +42,7 @@ def delete_lease(
     """ Delete a DHCP lease, not actually supported by the pFsense API yet... https://github.com/jaredhendrickson13/pfsense-api/issues/212 """
     client = get_client()
     lease_info = client.get_dhcpd_leases()
-    lease_data:  List[Dict[str, str]] = lease_info.data
+    lease_data: List[Dict[str, str]] = lease_info.data
 
     if mac and debug:
         logger.debug("Searching for MAC: {}", mac.lower())
