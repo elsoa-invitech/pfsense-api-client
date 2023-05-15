@@ -128,7 +128,7 @@ class PFSenseAPIClient:
 
     def get_dhcpd_leases(self):
         url = f"{self.baseurl}/api/v1/services/dhcpd/lease"
-        return self.api_client.get(url).get_json()
+        return self.api_client.get(url)
 
     # def get_dhcpd_leases(self):
     #     url = "/api/v1/services/dhcpd/lease"
@@ -165,7 +165,7 @@ def list_leases(
     client = get_client()
     lease_info = client.get_dhcpd_leases()
 
-    print("lease_info.get_json()=")
+    print("lease_info="+lease_info)
     lease_data: List[Dict[str, str]] = lease_info.data
 
     for lease in lease_data:
