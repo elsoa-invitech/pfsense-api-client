@@ -46,3 +46,11 @@ static	00:50:56:b7:f6:53	10.10.2.10	vcontrol01
 static	00:50:56:8d:76:48	10.0.20.36	win2019-01
 ```
 
+## If using `api-client` package and included test script
+
+### Dependencies
+
+```shell
+pip install -r requirements.apiclient.txt
+```
+
