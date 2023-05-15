@@ -174,7 +174,7 @@ class PFSenseAPIClient:
     ) -> APIResponse:
         """makes a call, returns the JSON blob as a dict"""
         response = self.call(url, method, payload)
-        print(response.json())
+        print("response=[%s]", response)
         return APIResponse.parse_obj(response.json())
 
 
