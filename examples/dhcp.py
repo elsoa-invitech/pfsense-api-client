@@ -4,6 +4,7 @@
 import sys
 from typing import Dict, List, Optional
 
+import requests
 import click
 from loguru import logger
 import questionary
