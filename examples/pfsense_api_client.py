@@ -165,7 +165,7 @@ def list_leases(
     client = get_client()
     lease_info = client.get_dhcpd_leases()
 
-    print("lease_info="+lease_info)
+    print("lease_info=[%s]", lease_info)
     lease_data: List[Dict[str, str]] = lease_info.data
 
     for lease in lease_data:
