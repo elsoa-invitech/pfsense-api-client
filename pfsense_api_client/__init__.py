@@ -14,7 +14,7 @@ import requests
 from .api_types import APIResponse, BasePFSenseAPIClient
 from .constants import RESPONSE_CODES
 from .firewall import FirewallMixin
-from .service  import ServiceMixin
+from .service import ServiceMixin
 from .status import StatusMixin
 from .system import SystemMixin
 
