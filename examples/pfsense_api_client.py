@@ -90,7 +90,9 @@ class PFSenseAPIClient:
             self.config = self.load_config(config_filename)
 
         self.api_client = APIClient(
-            authentication_method=HeaderAuthentication(token=f"{self.config.client_id} {self.config.client_token}"),
+            authentication_method=HeaderAuthentication(token=f"{self.config.client_id} {self.config.client_token}",
+                                                       parameter="Authorization",
+                                                       scheme=None),
             response_handler=JsonResponseHandler,
             request_formatter=JsonRequestFormatter,
         )
