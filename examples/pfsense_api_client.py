@@ -77,8 +77,6 @@ class PFSenseAPIClient:
         requests_session: Session = Session()
     ):
 
-        self.session = requests_session
-
         if config_filename:
             self.config = self.load_config(config_filename)
 
@@ -87,6 +85,8 @@ class PFSenseAPIClient:
             response_handler=JsonResponseHandler,
             request_formatter=JsonRequestFormatter,
         )
+        self.session = requests_session
+        self.api_client.set_session(requests_session)
 
     @property
     def baseurl(self) -> str:
