@@ -6,7 +6,7 @@ from pathlib import Path
 from requests import Response, Session
 
 from pydantic import BaseModel, Field, validator
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 # See examples here:
 # https://github.com/MikeWooster/api-client
