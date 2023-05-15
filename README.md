@@ -20,10 +20,10 @@ At the moment it only supports the "Local Database" authentication method of use
 
 ```json
 {
-        "username" : "me",
-        "password" : "mysupersecretpassword",
-        "hostname" : "example.com",
-        "port" : 8443
+    "username" : "me",
+    "password" : "mysupersecretpassword",
+    "hostname" : "example.com",
+    "port" : 8443
 }
 ```
 
