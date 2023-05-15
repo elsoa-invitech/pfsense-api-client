@@ -6,15 +6,19 @@ from pathlib import Path
 from requests import Response, Session
 from pydantic import BaseModel, Field, validator
 
-## See examples here:
-## https://github.com/MikeWooster/api-client
+# See examples here:
+# https://github.com/MikeWooster/api-client
+# ref: https://github.com/MikeWooster/api-client/blob/master/README.md#extended-example
 
 # from apiclient import APIClient
-
 from apiclient import (
     APIClient,
     HeaderAuthentication,
+    JsonResponseHandler,
+    JsonRequestFormatter,
 )
+from apiclient.exceptions import APIClientError
+
 
 # from apiclient.request_formatters import BaseRequestFormatter, NoOpRequestFormatter
 # from apiclient.response_handlers import BaseResponseHandler, RequestsResponseHandler
@@ -79,7 +83,9 @@ class PFSenseAPIClient:
             self.config = self.load_config(config_filename)
 
         self.api_client = APIClient(
-            authentication_method=HeaderAuthentication(token=f"{self.config.client_id} {self.config.client_token}")
+            authentication_method=HeaderAuthentication(token=f"{self.config.client_id} {self.config.client_token}"),
+            response_handler=JsonResponseHandler,
+            request_formatter=JsonRequestFormatter,
         )
 
     @property
