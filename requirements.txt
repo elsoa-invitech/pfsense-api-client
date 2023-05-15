@@ -2,3 +2,4 @@
 click
 loguru
 questionary
+requests
