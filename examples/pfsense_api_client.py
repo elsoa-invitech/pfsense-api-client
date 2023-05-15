@@ -125,10 +125,69 @@ class PFSenseAPIClient:
 
         return pfsense_config
 
+    def call(
+        self,
+        url: str,
+        method: str = "GET",
+        payload: Optional[Any] = None,
+        params: Optional[Any] = None,
+        **kwargs: Dict[str, Any],
+    ) -> Response:
+        """mocking type for mypy inheritance"""
+        if url.startswith("/"):
+            url = f"{self.baseurl}{url}"
 
-    def get_dhcpd_leases(self):
-        url = f"{self.baseurl}/api/v1/services/dhcpd/lease"
-        return self.api_client.get(url)
+        if payload is not None and method == "GET":
+            kwargs["params"] = payload
+        elif payload is not None:
+            kwargs["json"] = payload
+
+        if params is not None:
+            kwargs["params"] = params
+
+        if "headers" not in kwargs:
+            kwargs["headers"] = {}
+
+        if self.config.mode == "jwt":
+            kwargs["headers"]["Authorization"] = f"Bearer {self.config.jwt}"
+        elif self.config.mode == "api_token":
+            kwargs["headers"]["Authorization"] = f"{self.config.client_id} {self.config.client_token}"
+
+        if method == 'GET':
+            return self.api_client.get(url)
+        # if method=='post':
+        #     return self.api_client.post(url)
+
+        # return self.session.request(
+        #     url=url,
+        #     method=method,
+        #     allow_redirects=True,
+        #     **kwargs,  # type: ignore
+        #     )
+
+
+    def call_api_dict(
+        self,
+        url: str,
+        method: str = "GET",
+        payload: Optional[Dict[str, Any]] = None,
+    ) -> APIResponse:
+        """makes a call, returns the JSON blob as a dict"""
+        response = self.call(url, method, payload)
+        print(response.json())
+        return APIResponse.parse_obj(response.json())
+
+
+    def get_dhcpd_leases(
+        self, **filterargs: Dict[str, Any]
+    ) -> APIResponse:
+        """https://github.com/jaredhendrickson13/pfsense-api/blob/master/README.md#1-read-dhcpd-leases"""
+        url = "/api/v1/services/dhcpd/lease"
+        return self.call_api_dict(url, payload=filterargs)
+
+    # def get_dhcpd_leases(self):
+    #     url = f"{self.baseurl}/api/v1/services/dhcpd/lease"
+    #     return self.api_client.get(url)
 
     # def get_dhcpd_leases(self):
     #     url = "/api/v1/services/dhcpd/lease"
