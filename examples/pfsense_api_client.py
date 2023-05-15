@@ -148,10 +148,10 @@ class PFSenseAPIClient:
         if "headers" not in kwargs:
             kwargs["headers"] = {}
 
-        if self.config.mode == "jwt":
-            kwargs["headers"]["Authorization"] = f"Bearer {self.config.jwt}"
-        elif self.config.mode == "api_token":
-            kwargs["headers"]["Authorization"] = f"{self.config.client_id} {self.config.client_token}"
+        # if self.config.mode == "jwt":
+        #     kwargs["headers"]["Authorization"] = f"Bearer {self.config.jwt}"
+        # elif self.config.mode == "api_token":
+        #     kwargs["headers"]["Authorization"] = f"{self.config.client_id} {self.config.client_token}"
 
         if method == 'GET':
             return self.api_client.get(url)
@@ -175,7 +175,9 @@ class PFSenseAPIClient:
         """makes a call, returns the JSON blob as a dict"""
         response = self.call(url, method, payload)
         print("response=[%s]", response)
-        return APIResponse.parse_obj(response.json())
+        # return APIResponse.parse_obj(response.json())
+        # return APIResponse.parse_obj(response.data())
+        return APIResponse.parse_obj(response)
 
 
     def get_dhcpd_leases(
