@@ -4,6 +4,7 @@ import os
 from loguru import logger
 from pathlib import Path
 from requests import Response, Session
+import click
 
 from pydantic import BaseModel, Field, validator
 from typing import Any, Dict, List, Optional, Union
