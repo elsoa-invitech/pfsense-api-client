@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 from requests import Response, Session
+from pydantic import BaseModel, Field, validator
 
 ## See examples here:
 ## https://github.com/MikeWooster/api-client
@@ -15,7 +16,53 @@ from apiclient import (
 # from apiclient.request_formatters import BaseRequestFormatter, NoOpRequestFormatter
 # from apiclient.response_handlers import BaseResponseHandler, RequestsResponseHandler
 
-class MyClient(APIClient):
+class PFSenseConfig(BaseModel):
+    """This defines the expected config file
+
+        Example config file:
+    ```json
+    {
+            "username" : "me",
+            "password" : "mysupersecretpassword",
+            "hostname" : "example.com",
+            "port" : 8443,
+    }
+    ```
+    """
+
+    username: Optional[str]
+    password: Optional[str]
+    port: int = 443
+    hostname: str
+    mode: str = "local"
+    jwt: Optional[str]
+    client_id: Optional[str]
+    client_token: Optional[str]
+
+
+class APIResponse(BaseModel):
+    """standard JSON API response from the pFsense API"""
+
+    status: str
+    code: int
+    return_code: int = Field(
+        ..., title="return", alias="return", description="The return field from the API"
+    )
+    message: str
+    data: Any
+
+    @validator("code")
+    def validate_code(cls, value: int) -> int:
+        """validates it's an integer in the expected list"""
+        if value not in [200, 400, 401, 403, 404, 500]:
+            raise ValueError(f"Got an invalid status code ({value}).")
+        return value
+
+
+
+
+class PfSenseClient:
+    """ Base """
 
     def __init__(
         self,
@@ -28,9 +75,17 @@ class MyClient(APIClient):
         if config_filename:
             self.config = self.load_config(config_filename)
 
-    def list_customers(self):
-        url = "http://example.com/customers"
-        return self.get(url)
+        self.api_client = APIClient(
+            authentication_method=HeaderAuthentication(token=f"{self.config.client_id} {self.config.client_token}")
+        )
+
+    @property
+    def baseurl(self) -> str:
+        """ returns the base URL of the host """
+        retval = f"https://{self.config.hostname}"
+        if self.config.port:
+            retval += f":{self.config.port}"
+        return retval
 
     def load_config(self, filename: str) -> PFSenseConfig:
         """Loads the config from the specified JSON file (see the `PFSenseConfig` class for what fields are required)"""
@@ -50,11 +105,65 @@ class MyClient(APIClient):
         return pydantic_config
 
 
-client = APIClient(
-    authentication_method=HeaderAuthentication(token="secret"),
-    response_handler=BaseResponseHandler,
-    request_formatter=BaseRequestFormatter,
-)
-assert client.get_default_query_params() == {}
-assert client.get_default_headers() == {"Authorization": "Bearer secret"}
-assert client.get_default_username_password_authentication() is None
+    def list_leases(self):
+        url = "http://example.com/customers"
+        lease_info = client.get_dhcpd_leases()
+
+        return self.api_client.get(url)
+
+    def get_dhcpd_leases(self):
+        url = "/api/v1/services/dhcpd/lease"
+        response = self.call(url, method, payload)
+        # return self.call_api_dict(url, payload=filterargs)
+
+
+def get_client() -> PFSenseAPIClient:
+    """ client factory """
+    logger.remove()
+    logger.add(format=LOGGER_FORMAT, sink=sys.stdout)
+    session = requests.Session()
+    session.verify = False
+    client = PFSenseAPIClient(
+        config_filename="~/.config/pfsense-api.json",
+        requests_session=session
+        )
+    return client
+
+@click.group()
+def cli():
+    """ DHCP CLI for pFsense """
+
+@cli.command()
+@click.option("--find", "-f", help="Does a wildcard match based on this")
+@click.option("--expired", "-e", is_flag=True, default=False, help="Includes expired leases, off by default.")
+@click.option("--debug", "-d", is_flag=True, default=False, help="Debug mode, dump more data.")
+def list_leases(
+    find: Optional[str]=None,
+    expired: bool=False,
+    debug: bool=False,
+    ) -> None:
+    """ lists DHCP leases """
+    client = get_client()
+    lease_info = client.get_dhcpd_leases()
+
+    lease_data:  List[Dict[str, str]] = lease_info.data
+
+    for lease in lease_data:
+        if find is not None:
+            if find not in str(lease.values()):
+                continue
+        if not expired and lease['state'] == "expired":
+            continue
+        lease_message = f"{lease['type']}\t{lease['mac']}\t{lease['ip']}\t{lease.get('hostname', '')}"
+        if "descr" in lease and lease["descr"]:
+            lease_message += f" ({lease['descr']})"
+        if not lease["online"]:
+            logger.debug(lease_message)
+        else:
+            logger.info(lease_message)
+        if debug:
+            logger.debug(lease)
+
+
+if __name__ == '__main__':
+    cli()
