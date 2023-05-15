@@ -18,8 +18,11 @@ def get_client() -> PFSenseAPIClient:
     """ client factory """
     logger.remove()
     logger.add(format=LOGGER_FORMAT, sink=sys.stdout)
+    session = requests.Session()
+    session.verify = False
     client = PFSenseAPIClient(
-        config_filename="~/.config/pfsense-api.json"
+        config_filename="~/.config/pfsense-api.json",
+        requests_session=session
         )
     return client
 
