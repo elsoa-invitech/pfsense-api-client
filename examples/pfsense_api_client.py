@@ -4,7 +4,8 @@ import os
 from loguru import logger
 from pathlib import Path
 from requests import Response, Session
-# from pydantic import BaseModel, Field, validator
+
+from pydantic import BaseModel, Field, validator
 from typing import Dict, List, Optional
 
 # See examples here:
