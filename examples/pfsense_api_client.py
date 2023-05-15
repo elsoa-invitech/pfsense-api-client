@@ -70,7 +70,7 @@ class PFSenseAPIClient:
     def __init__(
         self,
         config_filename: Optional[str] = None,
-        requests_session: Session = Session(),
+        requests_session: Session = Session()
     ):
 
         self.session = requests_session
