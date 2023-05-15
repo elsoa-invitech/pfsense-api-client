@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 
+import os
+from loguru import logger
+from pathlib import Path
 from requests import Response, Session
 from pydantic import BaseModel, Field, validator
 
@@ -61,7 +64,7 @@ class APIResponse(BaseModel):
 
 
 
-class PfSenseClient:
+class PFSenseAPIClient:
     """ Base """
 
     def __init__(
