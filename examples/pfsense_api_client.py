@@ -109,15 +109,13 @@ class PFSenseAPIClient:
 
 
     def list_leases(self):
-        url = "http://example.com/customers"
-        lease_info = client.get_dhcpd_leases()
-
+        url = f"{self.baseurl}/api/v1/services/dhcpd/lease"
         return self.api_client.get(url)
 
-    def get_dhcpd_leases(self):
-        url = "/api/v1/services/dhcpd/lease"
-        response = self.call(url, method, payload)
-        # return self.call_api_dict(url, payload=filterargs)
+    # def get_dhcpd_leases(self):
+    #     url = "/api/v1/services/dhcpd/lease"
+    #     response = self.call(url, method, payload)
+    #     # return self.call_api_dict(url, payload=filterargs)
 
 
 def get_client() -> PFSenseAPIClient:
