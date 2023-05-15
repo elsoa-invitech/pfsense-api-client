@@ -21,7 +21,7 @@ Setup local client/auth config:
 ```shell
 $ cat ~/.config/pfsense-api.json
 {
-    "client_id": "61623346e",
+    "client_id": "41123346e",
     "client_token": "605a69fbee4e8d3cc6cb5068386e11e8",
     "mode": "api_token",
     "hostname": "pfsense.johnson.int"
