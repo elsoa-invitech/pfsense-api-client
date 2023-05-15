@@ -9,6 +9,8 @@ import click
 from pydantic import BaseModel, Field, validator
 from typing import Any, Dict, List, Optional, Union
 
+LOGGER_FORMAT = '<level>{message}</level>'
+
 # See examples here:
 # https://github.com/MikeWooster/api-client
 # ref: https://github.com/MikeWooster/api-client/blob/master/README.md#extended-example
