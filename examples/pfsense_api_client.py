@@ -116,7 +116,7 @@ class PFSenseAPIClient:
         return pfsense_config
 
 
-    def list_leases(self):
+    def get_dhcpd_leases(self):
         url = f"{self.baseurl}/api/v1/services/dhcpd/lease"
         return self.api_client.get(url)
 
