@@ -4,7 +4,8 @@ import os
 from loguru import logger
 from pathlib import Path
 from requests import Response, Session
-from pydantic import BaseModel, Field, validator
+# from pydantic import BaseModel, Field, validator
+from typing import Dict, List, Optional
 
 # See examples here:
 # https://github.com/MikeWooster/api-client
@@ -74,7 +75,7 @@ class PFSenseAPIClient:
     def __init__(
         self,
         config_filename: Optional[str] = None,
-        requests_session: Session = Session()
+        requests_session: Session = None
     ):
 
         if config_filename:
@@ -85,8 +86,9 @@ class PFSenseAPIClient:
             response_handler=JsonResponseHandler,
             request_formatter=JsonRequestFormatter,
         )
-        self.session = requests_session
-        self.api_client.set_session(requests_session)
+        if requests_session:
+            self.session = requests_session
+            self.api_client.set_session(requests_session)
 
     @property
     def baseurl(self) -> str:
@@ -103,15 +105,15 @@ class PFSenseAPIClient:
             error = f"Filename {self.config_filename.as_posix()} does not exist."
             raise FileNotFoundError(error)
         with self.config_filename.open(encoding="utf8") as file_handle:
-            pydantic_config = PFSenseConfig(
+            pfsense_config = PFSenseConfig(
                 **json.load(file_handle)
             )
-        self.config = pydantic_config
-        # self.hostname = pydantic_config.hostname
-        # self.port = pydantic_config.port
-        # self.mode = pydantic_config.mode or "local"
+        self.config = pfsense_config
+        # self.hostname = pfsense_config.hostname
+        # self.port = pfsense_config.port
+        # self.mode = pfsense_config.mode or "local"
 
-        return pydantic_config
+        return pfsense_config
 
 
     def list_leases(self):
