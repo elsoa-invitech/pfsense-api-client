@@ -78,6 +78,8 @@ class BasePFSenseAPIClient:
         self,
         username: Optional[str] = None,
         password: Optional[str] = None,
+        client_id: Optional[str] = None,
+        client_token: Optional[str] = None,
         hostname: Optional[str] = None,
         port: Optional[int] = None,
         config_filename: Optional[str] = None,
@@ -95,6 +97,10 @@ class BasePFSenseAPIClient:
                 config_data["username"] = username
             if password:
                 config_data["password"] = password
+            if client_id:
+                config_data["client_id"] = client_id
+            if client_token:
+                config_data["client_token"] = client_token
             if hostname:
                 config_data["hostname"] = hostname
             if port:
