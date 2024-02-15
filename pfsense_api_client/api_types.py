@@ -193,7 +193,6 @@ class BasePFSenseAPIClient:
     ) -> APIResponse:
         """makes a call, returns the JSON blob as a dict"""
         response = self.call(url, method, payload)
-        print(response.json())
         return APIResponse.parse_obj(response.json())
 
     def call_json(
