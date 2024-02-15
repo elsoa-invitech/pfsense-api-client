@@ -94,7 +94,7 @@ class ServiceMixin(BasePFSenseAPIClient):
         """https://github.com/jaredhendrickson13/pfsense-api/blob/master/README.md#1-create-dhcpd-static-mappings"""
         url = "/api/v1/services/dhcpd/static_mapping"
         method = "POST"
-        return self.call(url=url, method=method, payload=args)
+        return self.call_api(url=url, method=method, payload=args)
 
 
     def delete_dhcpd_static_mappings(
@@ -103,7 +103,7 @@ class ServiceMixin(BasePFSenseAPIClient):
         """https://github.com/jaredhendrickson13/pfsense-api/blob/master/README.md#2-delete-dhcpd-static-mappings"""
         url = "/api/v1/services/dhcpd/static_mapping"
         method = "DELETE"
-        return self.call(url=url, method=method, payload=args)
+        return self.call_api(url=url, method=method, payload=args)
 
 
     def get_dhcpd_static_mappings(
@@ -111,7 +111,7 @@ class ServiceMixin(BasePFSenseAPIClient):
     ) -> Response:
         """https://github.com/jaredhendrickson13/pfsense-api/blob/master/README.md#3-read-dhcpd-static-mappings"""
         url = "/api/v1/services/dhcpd/static_mapping"
-        return self.call(url, payload=filterargs)
+        return self.call_api(url, payload=filterargs)
 
 
     def update_dhcpd_static_mappings(
@@ -120,7 +120,7 @@ class ServiceMixin(BasePFSenseAPIClient):
         """https://github.com/jaredhendrickson13/pfsense-api/blob/master/README.md#4-update-dhcpd-static-mappings"""
         url = "/api/v1/services/dhcpd/static_mapping"
         method = "PUT"
-        return self.call(url=url, method=method, payload=args)
+        return self.call_api(url=url, method=method, payload=args)
 
 
     def restart_dnsmasq_service(
