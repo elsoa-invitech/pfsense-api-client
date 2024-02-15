@@ -107,7 +107,7 @@ class ServiceMixin(BasePFSenseAPIClient):
 
 
     def get_dhcpd_static_mappings(
-        self, *filterargs: Dict[str, Any]
+        self, **filterargs: Dict[str, Any]
     ) -> Response:
         """https://github.com/jaredhendrickson13/pfsense-api/blob/master/README.md#3-read-dhcpd-static-mappings"""
         url = "/api/v1/services/dhcpd/static_mapping"
